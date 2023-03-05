@@ -32,10 +32,10 @@
 
 	// list of images
 	function createListItems(imgs) {
-		var text = `<ul>`;
+        var text = `<ul id="ul_top_hypers">`;
 		Object.values(imgs).forEach(element => 
 		{	
-            var image = `<li><image src=${element}/></li>` //width = 300 style.margin="15px"
+            var image = `<li><image width = 300 height= 300 style.margin="15px" src=${element}/></li>` 
 			text = text + image;
 		}); 
 		text = text +`</ul>`;
@@ -95,8 +95,31 @@
 
 </script>
 <head>
-    <meta charset="utf-8" />
-    <title>Items</title>
+	<style>
+        table tr, table tr td:nth-last-child(1) {
+            display: block !important;
+            clear: both;
+        }
+
+        table tr, table tr td {
+			clear: both;
+        }
+
+        #div_top_hypers {
+            background-color: #eeeeee;
+            display: inline;
+        }
+
+        #ul_top_hypers li {
+            display: inline;
+        }
+
+		tr:hover {
+			background-color: #D6EEEE;
+		}
+	</style>
+	<meta charset="utf-8" />
+	<title>Items</title>
 </head>
 <body>
     <h1>Items on offer</h1>
