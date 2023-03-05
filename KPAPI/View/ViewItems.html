@@ -1,0 +1,106 @@
+﻿<!--[
+  {
+    "id": "e439f2ef-8bcd-4144-8e1a-b93830959dde",
+    "sku": 147034895,
+    "title": "Milos Gvozdenovic                                                                                   ",
+    "description": "Ulje na platnu,60x50 cm. ",
+    "url": "https://novi.kupujemprodajem.com/umetnicka-dela-i-materijali/slike-starije-od-20-godina/milos-gvozdenovic/oglas/147034895                                                                                                                                                                                   ",
+    "validUntil": "2023-03-28T00:00:00",
+    "authorFirstName": "Milos",
+    "authorLastName": "Gvozdenovic",
+    "authorNickName": null,
+    "price": 650,
+    "priceType": "Cena      ",
+    "condition": "DamagedCondition    ",
+    "sellerName": "Uskok",
+    "sellerPhone": null,
+    "images": [
+      "https://images.kupujemprodajem.com/photos/oglasi/5/89/147034895/big-147034895_63d38681abac27-86784111IMG_20170623_18.jpg                                                                                                                                                                                    "
+    ]
+  }
+]-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<script>
+
+	function* entries(obj) {
+		for (let key of Object.keys(obj)) {
+			yield [key, obj[key]];
+		}
+	}
+
+	// list of images
+	function createListItems(imgs) {
+		var text = `<ul>`;
+		Object.values(imgs).forEach(element => 
+		{	
+            var image = `<li><image src=${element}/></li>` //width = 300 style.margin="15px"
+			text = text + image;
+		}); 
+		text = text +`</ul>`;
+		return text;
+	}
+
+	const url = 'https://localhost:7190/KP';
+	fetch(url)
+		.then(data => data.json())
+		.then((json) => {
+
+			var itemObj = JSON.parse(JSON.stringify(json));
+
+			let tab = `<tr>
+				<th>Sku</th>
+				<th>Title</th>
+				<th>Description</th>
+				<th>Price</th>
+				<th>PriceType</th>
+				<th>Condition</th>
+				<th>Author First Name</th>
+				<th>Author Last Name</th>
+				<th>Url</th>
+				<th>Valid Until</th>
+				<th>Seller</th>
+				<th>Seller Phone</th>
+				<th>Photos</th>
+			</tr>`;
+		
+		
+
+			for (let [key, value] of entries(itemObj)) {
+
+				var text = createListItems(value.images);
+
+				tab += `<tr>
+					<td>${key}</td>
+					<td>${value.sku} </td>
+					<td>${value.title}</td>
+					<td>${value.description}</td>
+					<td>${value.price}</td>
+					<td>${value.pricetype}</td>
+					<td>${value.condition}</td>
+					<td>${value.authorFirstName}</td>
+					<td>${value.authorLastName}</td>
+					<td>${value.url}</td>
+					<td>${value.validUntil}</td>
+					<td>${value.sellerName}</td>
+					<td>${value.sellerPhone}</td>
+					<td>${text}</td>
+				</tr>`;
+		}
+
+			// Setting innerHTML as tab variable
+			document.getElementById("item").innerHTML = tab;	
+})
+
+</script>
+<head>
+    <meta charset="utf-8" />
+    <title>Items</title>
+</head>
+<body>
+    <h1>Items on offer</h1>
+    <!-- table for showing items -->
+    <table id="item"></table>
+</body>
+</html>
