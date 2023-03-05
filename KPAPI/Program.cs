@@ -20,6 +20,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+builder.Services.AddCors(options => options.AddPolicy("CorsPolicy", builder =>
+{
+    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+    //builder.WithOrigins("https://localhost:7190/KP").AllowAnyMethod().AllowAnyHeader();
+}));
+
 builder.Services.AddSingleton<IRepository>(x => new Repository(x.GetRequiredService<ILogger<Repository>>(), builder.Configuration.GetConnectionString("KPConnection")));
 
 var app = builder.Build();
@@ -31,6 +38,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
