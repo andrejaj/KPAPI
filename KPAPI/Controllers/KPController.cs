@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace KPAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class KPController : ControllerBase
     {
         private readonly ILogger<KPController> _logger;
@@ -16,7 +16,8 @@ namespace KPAPI.Controllers
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        [HttpGet(Name = "GetData")]
+        [HttpGet] 
+        [Route("/all")]
         public IEnumerable<Object> Get()
         {
             var items = _repository.GetItems();
@@ -29,6 +30,21 @@ namespace KPAPI.Controllers
             }
 
             return items;
+        }
+
+
+        [HttpGet]
+        [Route("/view")]
+        public IEnumerable<Object> Get(int id)
+        {
+            return new List<Object>();
+        }
+
+        // POST api/values
+        [HttpPost]
+        [Route("/save")]
+        public void Post([FromBody] string[] skus)
+        {
         }
     }
 }
