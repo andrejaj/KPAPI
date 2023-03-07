@@ -1,28 +1,50 @@
-﻿<!--[
-  {
-    "id": "e439f2ef-8bcd-4144-8e1a-b93830959dde",
-    "sku": 147034895,
-    "title": "Milos Gvozdenovic                                                                                   ",
-    "description": "Ulje na platnu,60x50 cm. ",
-    "url": "https://novi.kupujemprodajem.com/umetnicka-dela-i-materijali/slike-starije-od-20-godina/milos-gvozdenovic/oglas/147034895                                                                                                                                                                                   ",
-    "validUntil": "2023-03-28T00:00:00",
-    "authorFirstName": "Milos",
-    "authorLastName": "Gvozdenovic",
-    "authorNickName": null,
-    "price": 650,
-    "priceType": "Cena      ",
-    "condition": "DamagedCondition    ",
-    "sellerName": "Uskok",
-    "sellerPhone": null,
-    "images": [
-      "https://images.kupujemprodajem.com/photos/oglasi/5/89/147034895/big-147034895_63d38681abac27-86784111IMG_20170623_18.jpg                                                                                                                                                                                    "
-    ]
-  }
-]-->
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <script>
+
+    function uncheckAll() {
+        var get = document.getElementsByName('cbx');
+        for (var i = 0; i < get.length; i++) {
+            get[i].checked = false;
+        }
+    }
+
+    function checkCheckbox() {
+        var results = []
+        var markedCheckbox = document.querySelectorAll('input[type="checkbox"]:checked');
+        for (var checkbox of markedCheckbox) {
+            results.push(checkbox.value.replace('/', ''));
+        }
+
+        if (results.length > 0) {
+            postData(results);
+            console.log(results);
+            uncheckAll();
+        }
+    }
+
+    function checkComboBox() {
+        var comboBoxValue = document.getElementById("cboView").value;
+        console.log(comboBoxValue);
+    }
+
+    function postData(data) {
+       
+        fetch("https://localhost:7190/KP/Viewed", {
+            method: "POST", // or 'PUT'
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("Success:", data);
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+    }
 
 	function* entries(obj) {
 		for (let key of Object.keys(obj)) {
@@ -35,7 +57,7 @@
         var text = `<ul id="ul_top_hypers">`;
 		Object.values(imgs).forEach(element => 
 		{	
-            var image = `<li><image width = 300 height= 300 style.margin="15px" src=${element}/></li>` 
+            var image = `<li><image src=${element}/></li>` 
 			text = text + image;
 		}); 
 		text = text +`</ul>`;
@@ -43,7 +65,7 @@
 	}
 
 	const url = 'https://localhost:7190/KP';
-	fetch(url)
+        fetch(url) //{credentials: "same-origin",}
 		.then(data => data.json())
 		.then((json) => {
 
@@ -56,58 +78,76 @@
 				<th>Price</th>
 				<th>PriceType</th>
 				<th>Condition</th>
-				<th>Author First Name</th>
-				<th>Author Last Name</th>
-				<th>Url</th>
+				<th>First Name</th>
+				<th>Last Name</th>
 				<th>Valid Until</th>
 				<th>Seller</th>
-				<th>Seller Phone</th>
-				<th>Photos</th>
+				<th>Phone</th>
+				<th>Images</th>
 			</tr>`;
-		
-		
 
-			for (let [key, value] of entries(itemObj)) {
+            for (let [key, value] of entries(itemObj)) {
 
 				var text = createListItems(value.images);
 
-				tab += `<tr>
-					<td>${key}</td>
-					<td>${value.sku} </td>
+				tab += `<tr>					
+					<td><a href="${value.url}">${value.sku}</a></td>
 					<td>${value.title}</td>
 					<td>${value.description}</td>
 					<td>${value.price}</td>
 					<td>${value.pricetype}</td>
-					<td>${value.condition}</td>
+					<td>${value.condition}</td> 
 					<td>${value.authorFirstName}</td>
 					<td>${value.authorLastName}</td>
-					<td>${value.url}</td>
-					<td>${value.validUntil}</td>
+					<td>${value.validUntil.split('T')[0]}</td>
 					<td>${value.sellerName}</td>
 					<td>${value.sellerPhone}</td>
 					<td>${text}</td>
+                    <td><input type="checkbox" name="cbx" value=${value.sku}/>&nbsp;</td>
+                    <td><button onclick="checkCheckbox()">Save</button> <br></td>
 				</tr>`;
-		}
+            }
 
-			// Setting innerHTML as tab variable
-			document.getElementById("item").innerHTML = tab;	
+        var itemSize = Object.keys(itemObj).length;
+        document.getElementById("title").innerHTML = document.getElementById("title").innerHTML + " " + itemSize;	
+		// Setting innerHTML as tab variable
+		document.getElementById("item").innerHTML = tab;	
 })
 
 </script>
 <head>
 	<style>
-        table tr, table tr td:nth-last-child(1) {
-            display: block !important;
-            clear: both;
+
+        table thead, table tbody {
+            display: table-header-group;
         }
 
-        table tr, table tr td {
-			clear: both;
+        table tbody {
+            overflow-x: hidden;
+            overflow-y: scroll;
+            min-height: 90px;
+            max-height: 300px;
         }
 
-        #div_top_hypers {
-            background-color: #eeeeee;
-            display: inline;
+        td, th {
+            max-width: auto;
+            text-align: left;
+            vertical-align:top;
+        }
+
+        img {
+            border-radius: 8px;
+            width: 150px;
+            height: 150px;
+            
+        }
+
+        th, td {
+            border-bottom: 1px solid black;
+        }
+
+        td:nth-child(9) {
+            width: 10%;
         }
 
         #ul_top_hypers li {
@@ -122,7 +162,12 @@
 	<title>Items</title>
 </head>
 <body>
-    <h1>Items on offer</h1>
+    <h1 id="title">Items on offer</h1>
+    <select id="cboView" onchange="checkComboBox()" >
+        <option value="1">All</option>
+        <option value="2">Viewed</option>
+        <option value="3">Not Viewed</option>
+    </select>
     <!-- table for showing items -->
     <table id="item"></table>
 </body>
