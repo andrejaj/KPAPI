@@ -21,7 +21,7 @@ namespace KPAPI.Controllers
         public IEnumerable<Object> Get()
         {
             var items = _repository.GetItems();
-            var itemImages = _repository.GetImages();
+            var itemImages = _repository.GetImages(); //to be fixed pass list of items and retrive images together
 
             foreach (var item in items)
             {
@@ -37,7 +37,16 @@ namespace KPAPI.Controllers
         [Route("/view")]
         public IEnumerable<Object> Get(int id)
         {
-            return new List<Object>();
+            var items = (id == 2) ?_repository.GetItems() : _repository.GetItems(id);
+            var itemImages = _repository.GetImages(); //to be fixed pass list of items and retrive images together
+
+            foreach (var item in items)
+            {
+                var resultImages = itemImages.Where(x => x.ItemId.Equals(item.Id)).Select(x => x.Url);
+                item.Images.AddRange(resultImages);
+            }
+
+            return items;
         }
 
         // POST api/values
@@ -45,6 +54,7 @@ namespace KPAPI.Controllers
         [Route("/save")]
         public void Post([FromBody] string[] skus)
         {
+            _repository.InsertViewedOffer(skus);
         }
     }
 }
