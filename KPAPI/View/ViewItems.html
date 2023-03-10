@@ -17,20 +17,21 @@
         }
 
         if (results.length > 0) {
-            postData(results);
-            console.log(results);
+            postData("https://localhost:7190/Save", results);
+            console.log('skus:' + results);
             uncheckAll();
         }
     }
 
     function checkComboBox() {
-        var comboBoxValue = document.getElementById("cboView").value;
-        console.log(comboBoxValue);
+        var value = document.getElementById("cboView").value;
+        console.log('View : ' + value);
+        ViewById(value);
     }
 
-    function postData(data) {
+    function postData(url,data) {
        
-        fetch("https://localhost:7190/Save", {
+        fetch(url, {
             method: "POST", // or 'PUT'
             headers: {
                 "Content-Type": "application/json",
@@ -62,16 +63,19 @@
 		}); 
 		text = text +`</ul>`;
 		return text;
-	}
+    }
 
-	const url = 'https://localhost:7190/All';
-        fetch(url) //{credentials: "same-origin",}
-		.then(data => data.json())
-		.then((json) => {
+    function ViewById(id) {
+        console.log(id);
+        const url = 'https://localhost:7190/View' + '?id=' + id;
+        console.log(url);
+        fetch(url)
+            .then(data => data.json())
+            .then((json) => {
 
-			var itemObj = JSON.parse(JSON.stringify(json));
+                var itemObj = JSON.parse(JSON.stringify(json));
 
-			let tab = `<tr>
+                let tab = `<tr>
 				<th>Sku</th>
 				<th>Title</th>
 				<th>Description</th>
@@ -86,11 +90,11 @@
 				<th>Images</th>
 			</tr>`;
 
-            for (let [key, value] of entries(itemObj)) {
+                for (let [key, value] of entries(itemObj)) {
 
-				var text = createListItems(value.images);
+                    var text = createListItems(value.images);
 
-				tab += `<tr>					
+                    tab += `<tr>					
 					<td><a href="${value.url}">${value.sku}</a></td>
 					<td>${value.title}</td>
 					<td>${value.description}</td>
@@ -106,13 +110,14 @@
                     <td><input type="checkbox" name="cbx" value=${value.sku}/>&nbsp;</td>
                     <td><button onclick="checkCheckbox()">Save</button> <br></td>
 				</tr>`;
-            }
+                }
 
-        var itemSize = Object.keys(itemObj).length;
-        document.getElementById("title").innerHTML = document.getElementById("title").innerHTML + " " + itemSize;	
-		// Setting innerHTML as tab variable
-		document.getElementById("item").innerHTML = tab;	
-})
+                var itemSize = Object.keys(itemObj).length;
+                document.getElementById("size").innerHTML = itemSize;
+                // Setting innerHTML as tab variable
+                document.getElementById("item").innerHTML = tab;
+            })
+    }
 
 </script>
 <head>
@@ -161,13 +166,16 @@
 	<meta charset="utf-8" />
 	<title>Items</title>
 </head>
-<body>
-    <h1 id="title">Items on offer</h1>
-    <select id="cboView" onchange="checkComboBox()" >
-        <option value="1">All</option>
-        <option value="2">Viewed</option>
-        <option value="3">Not Viewed</option>
-    </select>
+<body onload="ViewById('2')">
+    <h1 id="title" style="display:inline">Items on offer </h1>
+    <h2 style="display:inline" id="size"></h2>
+    <div>
+        <select id="cboView" onchange="checkComboBox()">
+            <option value="2">All</option>
+            <option value="1">Viewed</option>
+            <option value="0">Not Viewed</option>
+        </select>
+    </div>
     <!-- table for showing items -->
     <table id="item"></table>
 </body>
