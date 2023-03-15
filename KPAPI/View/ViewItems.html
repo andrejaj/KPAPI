@@ -9,7 +9,7 @@
         }
     }
 
-    function checkCheckbox() {
+    function checkCheckBox() {
         var results = []
         var markedCheckbox = document.querySelectorAll('input[type="checkbox"]:checked');
         for (var checkbox of markedCheckbox) {
@@ -21,6 +21,8 @@
             console.log('skus:' + results);
             uncheckAll();
         }
+
+        checkComboBox();
     }
 
     function checkComboBox() {
@@ -29,22 +31,18 @@
         ViewById(value);
     }
 
-    function postData(url,data) {
-       
+    function postData(url, data) {
+
         fetch(url, {
-            method: "POST", // or 'PUT'
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(data),
         })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log("Success:", data);
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-            });
+            .then((response) => response)
+            .then((data) => console.log("Success:", data))
+            .catch((error) => console.error("Error:", error));
     }
 
 	function* entries(obj) {
@@ -66,6 +64,7 @@
     }
 
     function ViewById(id) {
+        document.getElementById("cboView").value = id;
         console.log(id);
         const url = 'https://localhost:7190/View' + '?id=' + id;
         console.log(url);
@@ -93,6 +92,11 @@
                 for (let [key, value] of entries(itemObj)) {
 
                     var text = createListItems(value.images);
+                    var checkBoxSave = ``;
+                    if (parseInt(id, 10) === 0) {
+                        checkBoxSave = `<td><input type="checkbox" name="cbx" value=${value.sku} />&nbsp;</td>` +
+                            `<td><button onclick="checkCheckBox();ViewById('0');">Save</button> <br></td>`;
+                    }
 
                     tab += `<tr>					
 					<td><a href="${value.url}">${value.sku}</a></td>
@@ -106,17 +110,16 @@
 					<td>${value.validUntil.split('T')[0]}</td>
 					<td>${value.sellerName}</td>
 					<td>${value.sellerPhone}</td>
-					<td>${text}</td>
-                    <td><input type="checkbox" name="cbx" value=${value.sku}/>&nbsp;</td>
-                    <td><button onclick="checkCheckbox()">Save</button> <br></td>
-				</tr>`;
+					<td>${text}</td>` +
+                        checkBoxSave +
+                        `</tr>`;
                 }
 
                 var itemSize = Object.keys(itemObj).length;
                 document.getElementById("size").innerHTML = itemSize;
                 // Setting innerHTML as tab variable
                 document.getElementById("item").innerHTML = tab;
-            })
+            });
     }
 
 </script>
@@ -166,7 +169,7 @@
 	<meta charset="utf-8" />
 	<title>Items</title>
 </head>
-<body onload="ViewById('2')">
+<body onload="ViewById('0')">
     <h1 id="title" style="display:inline">Items on offer </h1>
     <h2 style="display:inline" id="size"></h2>
     <div>
