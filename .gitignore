@@ -226,3 +226,4 @@ AppPackages/
 #####
 KP/KPWorker/Log/
 KPAPI/Log/
+KPAPI/.config/
