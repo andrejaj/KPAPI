@@ -1,0 +1,38 @@
+version: '3.4'
+
+services:
+  kpapi:
+    container_name: api
+    image: kpapi
+    build:
+      context: .
+      dockerfile: API.Dockerfile
+    #expose:
+    #  - "8080"
+    ports:
+      - "8333:8080"
+      - "801:80"
+    networks:
+     - m-proxy-net
+    #depends_on:
+    #  - dbs
+  view:
+      container_name: view
+      image : kpview
+      build:
+         context: .
+         dockerfile: View.Dockerfile
+      depends_on:
+         - kpapi
+      #links:
+      #   -  kpapi
+      ports:
+         - "81:80"
+      #volumes:
+      #   - ./build:/usr/share/nginx/html
+      networks:
+         - m-proxy-net
+networks:
+   m-proxy-net:
+    external:
+      name: custom_network

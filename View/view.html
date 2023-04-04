@@ -2,6 +2,8 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <script>
 
+    const hostUrl = "https://api:8333"; 
+	//local host - https://localhost:7190
     function uncheckAll() {
         var get = document.getElementsByName('cbx');
         for (var i = 0; i < get.length; i++) {
@@ -17,7 +19,7 @@
         }
 
         if (results.length > 0) {
-            postData("https://localhost:7190/Save", results);
+            postData(hostUrl + "/Save", results);
             console.log('skus:' + results);
             uncheckAll();
         }
@@ -66,7 +68,7 @@
     function ViewById(id) {
         document.getElementById("cboView").value = id;
         console.log(id);
-        const url = 'https://localhost:7190/View' + '?id=' + id;
+        const url = hostUrl + '/View' + '?id=' + id;
         console.log(url);
         fetch(url)
             .then(data => data.json())
