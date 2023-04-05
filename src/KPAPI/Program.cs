@@ -23,8 +23,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options => options.AddPolicy("CorsPolicy", builder =>
 {
+    //builder.WithHeaders("Access-Control-Allow-Origin", "*");
+    //builder.WithHeaders("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
+    //builder.WithHeaders("Access-Control-Allow-Headers", "Content-Type, Accept, Authorization");
     builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
-    //builder.WithOrigins("https://localhost:7190/KP").AllowAnyMethod().AllowAnyHeader(); //TBC: how to set for specific url
 }));
 
 builder.Services.AddSingleton<IRepository>(x => new Repository(x.GetRequiredService<ILogger<Repository>>(), builder.Configuration.GetConnectionString("KPConnection")));

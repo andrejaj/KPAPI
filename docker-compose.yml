@@ -7,11 +7,8 @@ services:
     build:
       context: .
       dockerfile: API.Dockerfile
-    #expose:
-    #  - "8080"
     ports:
-      - "8333:8080"
-      - "801:80"
+      - 5000:5000
     networks:
      - m-proxy-net
     #depends_on:
@@ -24,12 +21,8 @@ services:
          dockerfile: View.Dockerfile
       depends_on:
          - kpapi
-      #links:
-      #   -  kpapi
       ports:
-         - "81:80"
-      #volumes:
-      #   - ./build:/usr/share/nginx/html
+      - 8080:80
       networks:
          - m-proxy-net
 networks:

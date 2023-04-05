@@ -1,9 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <script>
-
-    const hostUrl = "https://api:8333"; 
-	//local host - https://localhost:7190
+    const hostUrl = "http://localhost:5000";
     function uncheckAll() {
         var get = document.getElementsByName('cbx');
         for (var i = 0; i < get.length; i++) {
@@ -121,7 +119,8 @@
                 document.getElementById("size").innerHTML = itemSize;
                 // Setting innerHTML as tab variable
                 document.getElementById("item").innerHTML = tab;
-            });
+            })
+			.catch(rejected => { console.log(rejected); });
     }
 
 </script>
